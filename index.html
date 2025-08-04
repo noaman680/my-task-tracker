@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanban Task Tracker</title>
+    <title>AI-Powered Kanban Tracker</title>
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,37 +23,37 @@
         /* Custom styles for the app */
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden; /* Prevent horizontal scroll on the body */
+            overflow-x: hidden;
         }
         
-        /* Style for the scrollbar */
-        .kanban-column-body::-webkit-scrollbar {
-            width: 8px;
-        }
-        .kanban-column-body::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 10px;
-        }
-        .kanban-column-body::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        .kanban-column-body::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        .kanban-column-body::-webkit-scrollbar { width: 8px; }
+        .kanban-column-body::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .kanban-column-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .kanban-column-body::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Styling for the task cards when being dragged */
         .task.dragging {
             opacity: 0.5;
             transform: rotate(3deg);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         
-        /* Highlight drop zones on drag over */
         .kanban-column.drag-over {
-            background-color: #f0f9ff; /* A light blue to indicate a valid drop target */
+            background-color: #f0f9ff;
             border-color: #3b82f6;
             border-style: dashed;
+        }
+        /* Simple spinner for loading states */
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -65,17 +65,17 @@
         <!-- Header -->
         <header class="mb-6 flex flex-col sm:flex-row justify-between items-center">
             <div class="text-center sm:text-left">
-                <h1 class="text-3xl font-bold text-gray-900">Kanban Task Tracker</h1>
-                <p class="text-gray-500 mt-1">Drag and drop tasks to organize your workflow.</p>
+                <h1 class="text-3xl font-bold text-gray-900">✨ AI Kanban Tracker</h1>
+                <p class="text-gray-500 mt-1">Apne workflow ko AI ki madad se organize karein.</p>
             </div>
             <button id="addTaskBtn" class="mt-4 sm:mt-0 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center">
-                <i class="fas fa-plus mr-2"></i> Add New Task
+                <i class="fas fa-plus mr-2"></i> Naya Task Banayein
             </button>
         </header>
 
         <!-- Collaboration Info -->
          <div id="userInfo" class="mb-4 p-3 bg-blue-100 border border-blue-200 text-blue-800 rounded-lg text-sm text-center break-all">
-            Loading user and session information...
+            User aur session ki jaankari load ho rahi hai...
         </div>
 
         <!-- Kanban Board -->
@@ -83,37 +83,25 @@
             <!-- To Do Column -->
             <div id="todo" class="kanban-column bg-white rounded-xl shadow-md flex flex-col">
                 <div class="p-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold flex items-center">
-                        <i class="fas fa-list-ul mr-3 text-red-500"></i> To Do
-                    </h2>
+                    <h2 class="text-lg font-semibold flex items-center"><i class="fas fa-list-ul mr-3 text-red-500"></i> To Do</h2>
                 </div>
-                <div class="kanban-column-body p-4 flex-grow overflow-y-auto" style="min-height: 400px;">
-                    <!-- Tasks for 'To Do' will be inserted here -->
-                </div>
+                <div class="kanban-column-body p-4 flex-grow overflow-y-auto" style="min-height: 400px;"></div>
             </div>
             
             <!-- In Progress Column -->
             <div id="inprogress" class="kanban-column bg-white rounded-xl shadow-md flex flex-col">
                 <div class="p-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold flex items-center">
-                        <i class="fas fa-spinner fa-spin mr-3 text-yellow-500"></i> In Progress
-                    </h2>
+                    <h2 class="text-lg font-semibold flex items-center"><i class="fas fa-spinner fa-spin mr-3 text-yellow-500"></i> In Progress</h2>
                 </div>
-                <div class="kanban-column-body p-4 flex-grow overflow-y-auto" style="min-height: 400px;">
-                    <!-- Tasks for 'In Progress' will be inserted here -->
-                </div>
+                <div class="kanban-column-body p-4 flex-grow overflow-y-auto" style="min-height: 400px;"></div>
             </div>
             
             <!-- Done Column -->
             <div id="done" class="kanban-column bg-white rounded-xl shadow-md flex flex-col">
                 <div class="p-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold flex items-center">
-                        <i class="fas fa-check-circle mr-3 text-green-500"></i> Done
-                    </h2>
+                    <h2 class="text-lg font-semibold flex items-center"><i class="fas fa-check-circle mr-3 text-green-500"></i> Done</h2>
                 </div>
-                <div class="kanban-column-body p-4 flex-grow overflow-y-auto" style="min-height: 400px;">
-                    <!-- Tasks for 'Done' will be inserted here -->
-                </div>
+                <div class="kanban-column-body p-4 flex-grow overflow-y-auto" style="min-height: 400px;"></div>
             </div>
         </main>
     </div>
@@ -121,7 +109,7 @@
     <!-- Add/Edit Task Modal -->
     <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
         <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md">
-            <h2 id="modalTitle" class="text-2xl font-bold mb-4">Add New Task</h2>
+            <h2 id="modalTitle" class="text-2xl font-bold mb-4">Naya Task Banayein</h2>
             <form id="taskForm">
                 <input type="hidden" id="taskId">
                 <div class="mb-4">
@@ -129,7 +117,12 @@
                     <input type="text" id="taskTitle" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
                 </div>
                 <div class="mb-6">
-                    <label for="taskDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="taskDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                        <button type="button" id="generateDescBtn" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
+                            ✨ AI se Generate Karein
+                        </button>
+                    </div>
                     <textarea id="taskDescription" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 </div>
                 <div class="flex justify-end space-x-3">
@@ -143,8 +136,8 @@
     <!-- Custom Confirmation Modal -->
     <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
         <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-sm">
-            <h2 class="text-lg font-bold mb-4">Are you sure?</h2>
-            <p id="confirmMessage" class="text-gray-600 mb-6">Do you really want to delete this task? This action cannot be undone.</p>
+            <h2 class="text-lg font-bold mb-4">Pakka?</h2>
+            <p id="confirmMessage" class="text-gray-600 mb-6">Kya aap sach mein is task ko delete karna chahte hain? Yeh action reverse nahi hoga.</p>
             <div class="flex justify-end space-x-3">
                 <button id="confirmCancelBtn" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-300">Cancel</button>
                 <button id="confirmDeleteBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">Delete</button>
@@ -155,17 +148,14 @@
 
     <!-- Firebase SDK -->
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Firebase and App Configuration ---
+        // --- App Configuration ---
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-kanban-app';
-        
-        let app, auth, db, userId;
-        let tasksCollection;
+        let app, auth, db, userId, tasksCollection;
 
         // --- UI Elements ---
         const addTaskBtn = document.getElementById('addTaskBtn');
@@ -176,29 +166,81 @@
         const confirmCancelBtn = document.getElementById('confirmCancelBtn');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const userInfoDiv = document.getElementById('userInfo');
+        const generateDescBtn = document.getElementById('generateDescBtn');
         let taskToDeleteId = null;
 
-        // --- Initialize Firebase and Auth ---
+        // --- Gemini API Call ---
+        async function callGeminiAPI(prompt, isJson = false, retries = 3, delay = 1000) {
+            const apiKey = ""; // Will be provided by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+
+            if (isJson) {
+                payload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        description: "A list of sub-tasks.",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                "title": { "type": "STRING", "description": "The title of the sub-task." },
+                                "description": { "type": "STRING", "description": "A brief description of the sub-task." }
+                            },
+                            required: ["title"]
+                        }
+                    }
+                };
+            }
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                        throw new Error("Invalid response structure from Gemini API");
+                    }
+                } catch (error) {
+                    console.error(`Gemini API call failed (attempt ${i + 1}):`, error);
+                    if (i === retries - 1) throw error; // Rethrow last error
+                    await new Promise(res => setTimeout(res, delay * Math.pow(2, i))); // Exponential backoff
+                }
+            }
+        }
+
+
+        // --- Firebase Initialization ---
         async function initializeFirebase() {
             try {
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
-
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         userId = user.uid;
-                        console.log("User is signed in with UID:", userId);
                         setupApp();
                     } else {
-                        console.log("No user signed in, attempting to sign in.");
                         await authenticateUser();
                     }
                 });
-
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                userInfoDiv.textContent = 'Error: Could not connect to the database.';
+                userInfoDiv.textContent = 'Error: Database se connect nahi ho paaya.';
             }
         }
         
@@ -206,60 +248,48 @@
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
-                    console.log("Signed in with custom token.");
                 } else {
                     await signInAnonymously(auth);
-                    console.log("Signed in anonymously.");
                 }
             } catch (error) {
                 console.error("Authentication failed:", error);
-                userInfoDiv.textContent = 'Error: Authentication failed.';
+                userInfoDiv.textContent = 'Error: Authentication fail ho gayi.';
             }
         }
 
-        // --- Setup App after Auth ---
+        // --- App Setup ---
         function setupApp() {
-            // Define the path for our public, collaborative tasks
             const collectionPath = `/artifacts/${appId}/public/data/tasks`;
             tasksCollection = collection(db, collectionPath);
             
-            // Display user/session info for collaboration
             userInfoDiv.innerHTML = `
-                <span class="font-semibold">Share this board!</span> Your App ID is: 
+                <span class="font-semibold">Iss board ko share karein!</span> Aapka App ID hai: 
                 <strong class="font-mono bg-blue-200 px-1 rounded">${appId}</strong>. 
-                Your User ID: <strong class="font-mono bg-blue-200 px-1 rounded">${userId}</strong>
+                Aapka User ID: <strong class="font-mono bg-blue-200 px-1 rounded">${userId}</strong>
             `;
 
-            // Listen for real-time updates to tasks
-            const q = query(tasksCollection);
-            onSnapshot(q, (snapshot) => {
+            onSnapshot(query(tasksCollection), (snapshot) => {
                 clearBoard();
                 snapshot.docs.forEach(doc => {
                     renderTask({ ...doc.data(), id: doc.id });
                 });
-            }, (error) => {
-                console.error("Error fetching tasks:", error);
-                alert("Could not fetch tasks. Please check the console for errors.");
-            });
+            }, (error) => console.error("Error fetching tasks:", error));
 
             setupEventListeners();
         }
 
-        // --- Task Rendering ---
+        // --- UI Rendering ---
         function clearBoard() {
             document.querySelectorAll('.kanban-column-body').forEach(col => col.innerHTML = '');
         }
 
         function renderTask(task) {
             const column = document.getElementById(task.status);
-            if (!column) {
-                console.warn(`Column for status "${task.status}" not found.`);
-                return;
-            }
+            if (!column) return;
 
             const taskCard = document.createElement('div');
             taskCard.id = task.id;
-            taskCard.className = 'task bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md transition-shadow duration-200';
+            taskCard.className = 'task bg-white border border-gray-200 rounded-lg p-3 mb-3 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md transition-shadow duration-200';
             taskCard.draggable = true;
 
             taskCard.innerHTML = `
@@ -271,48 +301,40 @@
                     </div>
                 </div>
                 <p class="text-gray-600 mt-2 text-sm">${task.description || ''}</p>
+                <div class="mt-3 pt-2 border-t border-gray-100">
+                     <button class="suggest-subtasks-btn text-xs w-full text-left text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
+                        ✨ Sub-tasks ka Sujhaav Paayein
+                     </button>
+                </div>
             `;
 
             column.querySelector('.kanban-column-body').appendChild(taskCard);
 
-            // Add event listeners for the new task card
             taskCard.addEventListener('dragstart', handleDragStart);
             taskCard.querySelector('.edit-btn').addEventListener('click', () => openModal(task));
             taskCard.querySelector('.delete-btn').addEventListener('click', () => openConfirmModal(task.id));
+            taskCard.querySelector('.suggest-subtasks-btn').addEventListener('click', (e) => handleSuggestSubtasks(e, task));
         }
 
-        // --- Modal Handling ---
+        // --- Modal & Form Handling ---
         function openModal(task = null) {
             taskForm.reset();
-            const modalTitle = document.getElementById('modalTitle');
-            const taskIdInput = document.getElementById('taskId');
             if (task) {
-                modalTitle.textContent = 'Edit Task';
-                taskIdInput.value = task.id;
+                document.getElementById('modalTitle').textContent = 'Task Edit Karein';
+                document.getElementById('taskId').value = task.id;
                 document.getElementById('taskTitle').value = task.title;
                 document.getElementById('taskDescription').value = task.description;
             } else {
-                modalTitle.textContent = 'Add New Task';
-                taskIdInput.value = '';
+                document.getElementById('modalTitle').textContent = 'Naya Task Banayein';
+                document.getElementById('taskId').value = '';
             }
             taskModal.classList.remove('hidden');
         }
 
-        function closeModal() {
-            taskModal.classList.add('hidden');
-        }
+        function closeModal() { taskModal.classList.add('hidden'); }
+        function openConfirmModal(taskId) { taskToDeleteId = taskId; confirmModal.classList.remove('hidden'); }
+        function closeConfirmModal() { confirmModal.classList.add('hidden'); taskToDeleteId = null; }
 
-        function openConfirmModal(taskId) {
-            taskToDeleteId = taskId;
-            confirmModal.classList.remove('hidden');
-        }
-
-        function closeConfirmModal() {
-            confirmModal.classList.add('hidden');
-            taskToDeleteId = null;
-        }
-
-        // --- CRUD Operations (Create, Update, Delete) ---
         async function handleFormSubmit(e) {
             e.preventDefault();
             const taskId = document.getElementById('taskId').value;
@@ -323,18 +345,16 @@
             };
 
             try {
-                if (taskId) { // Update existing task
-                    const taskRef = doc(db, tasksCollection.path, taskId);
-                    await setDoc(taskRef, taskData, { merge: true });
-                } else { // Create new task
-                    taskData.status = 'todo'; // Default status
+                if (taskId) {
+                    await setDoc(doc(db, tasksCollection.path, taskId), taskData, { merge: true });
+                } else {
+                    taskData.status = 'todo';
                     taskData.createdAt = serverTimestamp();
                     await addDoc(tasksCollection, taskData);
                 }
                 closeModal();
             } catch (error) {
                 console.error("Error saving task:", error);
-                alert("Failed to save task. See console for details.");
             }
         }
 
@@ -345,26 +365,73 @@
                 closeConfirmModal();
             } catch (error) {
                 console.error("Error deleting task:", error);
-                alert("Failed to delete task. See console for details.");
             }
         }
 
-        // --- Drag and Drop Handlers ---
-        function handleDragStart(e) {
-            e.dataTransfer.setData('text/plain', e.target.id);
-            e.target.classList.add('dragging');
+        // --- AI Feature Handlers ---
+        async function handleGenerateDescription(e) {
+            const button = e.currentTarget;
+            const originalText = button.innerHTML;
+            const title = document.getElementById('taskTitle').value;
+            if (!title.trim()) {
+                alert("Description generate karne ke liye pehle title likhein.");
+                return;
+            }
+            
+            try {
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner"></span> Generating...';
+                const prompt = `Ek task ke liye ek chota, saaf description likhein jiska title hai: "${title}". Description professional aur seedha hona chahiye.`;
+                const description = await callGeminiAPI(prompt);
+                document.getElementById('taskDescription').value = description;
+            } catch (error) {
+                console.error("Description generation failed:", error);
+                alert("AI description generate nahi kar paaya. Kripya dobara koshish karein.");
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }
         }
 
-        function handleDragOver(e) {
-            e.preventDefault(); // Necessary to allow dropping
-            const column = e.currentTarget;
-            column.classList.add('drag-over');
+        async function handleSuggestSubtasks(e, task) {
+            const button = e.currentTarget;
+            const originalText = button.innerHTML;
+
+            try {
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner mr-2"></span> Sujhaav de raha hai...';
+                const prompt = `Ek bade task ko chote-chote, actionable sub-tasks mein todo. Parent Task Title: "${task.title}". Parent Task Description: "${task.description || 'N/A'}". Sirf ek JSON array of objects do, jahan har object mein "title" aur "description" ho.`;
+                const result = await callGeminiAPI(prompt, true);
+                const subtasks = JSON.parse(result);
+
+                if (Array.isArray(subtasks) && subtasks.length > 0) {
+                    for (const subtask of subtasks) {
+                        const newSubtask = {
+                            title: subtask.title,
+                            description: subtask.description || `"${task.title}" ka hissa.`,
+                            status: 'todo',
+                            authorId: userId,
+                            createdAt: serverTimestamp()
+                        };
+                        await addDoc(tasksCollection, newSubtask);
+                    }
+                } else {
+                    alert("AI koi sub-task nahi de paaya.");
+                }
+
+            } catch (error) {
+                console.error("Sub-task suggestion failed:", error);
+                alert("AI sub-tasks ka sujhaav nahi de paaya. Kripya dobara koshish karein.");
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }
         }
-        
-        function handleDragLeave(e) {
-            const column = e.currentTarget;
-            column.classList.remove('drag-over');
-        }
+
+        // --- Drag and Drop & Confetti ---
+        function handleDragStart(e) { e.dataTransfer.setData('text/plain', e.target.id); e.target.classList.add('dragging'); }
+        function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+        function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
 
         async function handleDrop(e) {
             e.preventDefault();
@@ -372,34 +439,15 @@
             const targetColumn = e.currentTarget;
             const newStatus = targetColumn.id;
             
-            const draggedElement = document.getElementById(taskId);
-            if (draggedElement) {
-                draggedElement.classList.remove('dragging');
-            }
+            document.getElementById(taskId)?.classList.remove('dragging');
             targetColumn.classList.remove('drag-over');
 
-            // Update task status in Firestore
             try {
-                const taskRef = doc(db, tasksCollection.path, taskId);
-                await setDoc(taskRef, { status: newStatus }, { merge: true });
-                
-                // If moved to 'Done', trigger confetti!
-                if (newStatus === 'done') {
-                    launchConfetti();
-                }
+                await setDoc(doc(db, tasksCollection.path, taskId), { status: newStatus }, { merge: true });
+                if (newStatus === 'done') confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
             } catch (error) {
                 console.error("Error updating task status:", error);
-                alert("Failed to move task. See console for details.");
             }
-        }
-
-        // --- Confetti ---
-        function launchConfetti() {
-            confetti({
-                particleCount: 150,
-                spread: 90,
-                origin: { y: 0.6 }
-            });
         }
 
         // --- Event Listeners Setup ---
@@ -407,12 +455,10 @@
             addTaskBtn.addEventListener('click', () => openModal());
             cancelBtn.addEventListener('click', closeModal);
             taskForm.addEventListener('submit', handleFormSubmit);
-
-            // Confirmation modal listeners
             confirmCancelBtn.addEventListener('click', closeConfirmModal);
             confirmDeleteBtn.addEventListener('click', deleteTask);
+            generateDescBtn.addEventListener('click', handleGenerateDescription);
 
-            // Drag and drop listeners for columns
             document.querySelectorAll('.kanban-column').forEach(column => {
                 column.addEventListener('dragover', handleDragOver);
                 column.addEventListener('dragleave', handleDragLeave);
@@ -422,7 +468,6 @@
 
         // --- Start the App ---
         document.addEventListener('DOMContentLoaded', initializeFirebase);
-
     </script>
 </body>
 </html>
