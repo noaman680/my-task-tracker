@@ -66,16 +66,16 @@
         <header class="mb-6 flex flex-col sm:flex-row justify-between items-center">
             <div class="text-center sm:text-left">
                 <h1 class="text-3xl font-bold text-gray-900">✨ AI Kanban Tracker</h1>
-                <p class="text-gray-500 mt-1">Apne workflow ko AI ki madad se organize karein.</p>
+                <p class="text-gray-500 mt-1">Organize your workflow with the power of AI.</p>
             </div>
             <button id="addTaskBtn" class="mt-4 sm:mt-0 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center">
-                <i class="fas fa-plus mr-2"></i> Naya Task Banayein
+                <i class="fas fa-plus mr-2"></i> Add New Task
             </button>
         </header>
 
         <!-- Collaboration Info -->
          <div id="userInfo" class="mb-4 p-3 bg-blue-100 border border-blue-200 text-blue-800 rounded-lg text-sm text-center break-all">
-            User aur session ki jaankari load ho rahi hai...
+            Loading user and session information...
         </div>
 
         <!-- Kanban Board -->
@@ -109,7 +109,7 @@
     <!-- Add/Edit Task Modal -->
     <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
         <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md">
-            <h2 id="modalTitle" class="text-2xl font-bold mb-4">Naya Task Banayein</h2>
+            <h2 id="modalTitle" class="text-2xl font-bold mb-4">Add New Task</h2>
             <form id="taskForm">
                 <input type="hidden" id="taskId">
                 <div class="mb-4">
@@ -120,7 +120,7 @@
                     <div class="flex justify-between items-center mb-1">
                         <label for="taskDescription" class="block text-sm font-medium text-gray-700">Description</label>
                         <button type="button" id="generateDescBtn" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
-                            ✨ AI se Generate Karein
+                            ✨ Generate with AI
                         </button>
                     </div>
                     <textarea id="taskDescription" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
@@ -136,8 +136,8 @@
     <!-- Custom Confirmation Modal -->
     <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
         <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-sm">
-            <h2 class="text-lg font-bold mb-4">Pakka?</h2>
-            <p id="confirmMessage" class="text-gray-600 mb-6">Kya aap sach mein is task ko delete karna chahte hain? Yeh action reverse nahi hoga.</p>
+            <h2 class="text-lg font-bold mb-4">Are you sure?</h2>
+            <p id="confirmMessage" class="text-gray-600 mb-6">Do you really want to delete this task? This action cannot be undone.</p>
             <div class="flex justify-end space-x-3">
                 <button id="confirmCancelBtn" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-300">Cancel</button>
                 <button id="confirmDeleteBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">Delete</button>
@@ -240,7 +240,7 @@
                 });
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                userInfoDiv.textContent = 'Error: Database se connect nahi ho paaya.';
+                userInfoDiv.textContent = 'Error: Could not connect to the database.';
             }
         }
         
@@ -253,7 +253,7 @@
                 }
             } catch (error) {
                 console.error("Authentication failed:", error);
-                userInfoDiv.textContent = 'Error: Authentication fail ho gayi.';
+                userInfoDiv.textContent = 'Error: Authentication failed.';
             }
         }
 
@@ -263,9 +263,9 @@
             tasksCollection = collection(db, collectionPath);
             
             userInfoDiv.innerHTML = `
-                <span class="font-semibold">Iss board ko share karein!</span> Aapka App ID hai: 
+                <span class="font-semibold">Share this board!</span> Your App ID is: 
                 <strong class="font-mono bg-blue-200 px-1 rounded">${appId}</strong>. 
-                Aapka User ID: <strong class="font-mono bg-blue-200 px-1 rounded">${userId}</strong>
+                Your User ID: <strong class="font-mono bg-blue-200 px-1 rounded">${userId}</strong>
             `;
 
             onSnapshot(query(tasksCollection), (snapshot) => {
@@ -303,7 +303,7 @@
                 <p class="text-gray-600 mt-2 text-sm">${task.description || ''}</p>
                 <div class="mt-3 pt-2 border-t border-gray-100">
                      <button class="suggest-subtasks-btn text-xs w-full text-left text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
-                        ✨ Sub-tasks ka Sujhaav Paayein
+                        ✨ Suggest Sub-tasks
                      </button>
                 </div>
             `;
@@ -320,12 +320,12 @@
         function openModal(task = null) {
             taskForm.reset();
             if (task) {
-                document.getElementById('modalTitle').textContent = 'Task Edit Karein';
+                document.getElementById('modalTitle').textContent = 'Edit Task';
                 document.getElementById('taskId').value = task.id;
                 document.getElementById('taskTitle').value = task.title;
                 document.getElementById('taskDescription').value = task.description;
             } else {
-                document.getElementById('modalTitle').textContent = 'Naya Task Banayein';
+                document.getElementById('modalTitle').textContent = 'Add New Task';
                 document.getElementById('taskId').value = '';
             }
             taskModal.classList.remove('hidden');
@@ -374,19 +374,19 @@
             const originalText = button.innerHTML;
             const title = document.getElementById('taskTitle').value;
             if (!title.trim()) {
-                alert("Description generate karne ke liye pehle title likhein.");
+                alert("Please enter a title first to generate a description.");
                 return;
             }
             
             try {
                 button.disabled = true;
                 button.innerHTML = '<span class="spinner"></span> Generating...';
-                const prompt = `Ek task ke liye ek chota, saaf description likhein jiska title hai: "${title}". Description professional aur seedha hona chahiye.`;
+                const prompt = `Write a brief, clear description for a task titled: "${title}". The description should be professional and to the point.`;
                 const description = await callGeminiAPI(prompt);
                 document.getElementById('taskDescription').value = description;
             } catch (error) {
                 console.error("Description generation failed:", error);
-                alert("AI description generate nahi kar paaya. Kripya dobara koshish karein.");
+                alert("AI failed to generate a description. Please try again.");
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalText;
@@ -399,8 +399,8 @@
 
             try {
                 button.disabled = true;
-                button.innerHTML = '<span class="spinner mr-2"></span> Sujhaav de raha hai...';
-                const prompt = `Ek bade task ko chote-chote, actionable sub-tasks mein todo. Parent Task Title: "${task.title}". Parent Task Description: "${task.description || 'N/A'}". Sirf ek JSON array of objects do, jahan har object mein "title" aur "description" ho.`;
+                button.innerHTML = '<span class="spinner mr-2"></span> Suggesting...';
+                const prompt = `Break down a large task into small, actionable sub-tasks. Parent Task Title: "${task.title}". Parent Task Description: "${task.description || 'N/A'}". Provide only a JSON array of objects, where each object has a "title" and a "description".`;
                 const result = await callGeminiAPI(prompt, true);
                 const subtasks = JSON.parse(result);
 
@@ -408,7 +408,7 @@
                     for (const subtask of subtasks) {
                         const newSubtask = {
                             title: subtask.title,
-                            description: subtask.description || `"${task.title}" ka hissa.`,
+                            description: subtask.description || `Part of the parent task: "${task.title}".`,
                             status: 'todo',
                             authorId: userId,
                             createdAt: serverTimestamp()
@@ -416,12 +416,12 @@
                         await addDoc(tasksCollection, newSubtask);
                     }
                 } else {
-                    alert("AI koi sub-task nahi de paaya.");
+                    alert("The AI could not suggest any sub-tasks.");
                 }
 
             } catch (error) {
                 console.error("Sub-task suggestion failed:", error);
-                alert("AI sub-tasks ka sujhaav nahi de paaya. Kripya dobara koshish karein.");
+                alert("The AI failed to suggest sub-tasks. Please try again.");
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalText;
